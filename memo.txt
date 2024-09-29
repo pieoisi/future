@@ -1,0 +1,12 @@
+touchableOpacity で、usestateの中身を変更するのはできたから、
+1　ボタン押してaというuseStateをtrue にする
+2　if文で、aがtrueなら、bというuseStateを1秒おきに+1でsetするみたいな
+
+isRunning ?　みたいな感じで画像変更できそう 2はクリア
+
+https://zenn.dev/ringotabetai/articles/a25060eb756b0c
+これ読みながら作る
+
+memo2.txt の中のやつがストップウォッチの仮の姿
+
+react-native-background-timerで、通知送られてアプリを開いた瞬間からタイマーがスタートする　目標時間以降に開くと自動でスタートする

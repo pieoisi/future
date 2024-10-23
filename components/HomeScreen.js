@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import {
   StyleSheet,
@@ -9,20 +8,25 @@ import {
   StatusBar,
   Image,
   Button,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../styles.js";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Title</Text>
+          <Image
+            source={require("../assets/AcYXlgqfOd9m7DH1727664233_1727664266.png")}
+            style={styles.titleImage}
+          ></Image>
         </View>
         <View style={styles.stopwatchContainer}>
-          <Stopwatch style={styles.stopwatch} />
+          <Stopwatch navigation={navigation} />
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -44,13 +48,13 @@ export default function HomeScreen() {
   );
 }
 
-const Stopwatch = (props) => {
+const Stopwatch = ({ navigation }) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
 
   function handleStart() {
-    const startTime = Date.now() - time; // 経過時間を引いて補正
+    const startTime = Date.now() - time;
     intervalRef.current = setInterval(() => {
       setIsRunning(true);
       setTime(Date.now() - startTime);
@@ -60,6 +64,43 @@ const Stopwatch = (props) => {
   function handlePause() {
     clearInterval(intervalRef.current);
     setIsRunning(false);
+    if (parseInt(seconds, 10) < 5) {
+      Alert.alert(
+        "現在のタイムは5分以下です",
+        "5分以下だと記録に残りません。終了してよろしいですか？",
+        [
+          {
+            text: "NO",
+            onPress: handleStart,
+          },
+          {
+            text: "OK",
+            onPress: () => {
+              clearInterval(intervalRef.current);
+              setTime(0);
+            },
+          },
+        ]
+      );
+    } else {
+      Alert.alert("タイマーを終了しますか？", "記録に残ります。", [
+        {
+          text: "NO",
+          onPress: handleStart,
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            Alert.alert("お疲れさまでした！", Date(time));
+            clearInterval(intervalRef.current);
+            const newItem = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+            const today = Date(time);
+            setTime(0);
+            navigation.navigate("記録", { item: newItem , date: today});
+          },
+        },
+      ]);
+    }
   }
 
   function handleReset() {
@@ -75,32 +116,19 @@ const Stopwatch = (props) => {
 
   return (
     <>
-      <Text>Stopwatch</Text>
       <Text style={styles.stopwatchText}>
         {hours}:{minutes}:{seconds}:{milliseconds}
       </Text>
       {isRunning ? (
-        <TouchableOpacity onPress={handlePause}>
-          <Image
-            style={styles.stopwatchImage}
-            source={{
-              uri: "https://placehold.jp/3d4070/ffffff/60x60.png?text=Stopwatch",
-            }}
-          ></Image>
-        </TouchableOpacity>
+        <Button
+          onPress={handlePause}
+          title="Pause"
+          style={styles.buttonText}
+        ></Button>
       ) : (
-        <TouchableOpacity onPress={handleStart}>
-          <Image
-            style={styles.stopwatchImage}
-            source={{
-              uri: "https://placehold.jp/345454/ffffff/60x60.png?text=Stopwatch",
-            }}
-          ></Image>
-        </TouchableOpacity>
+        <Button onPress={handleStart} title="Start"></Button>
       )}
       <Button onPress={handleReset} title="Reset"></Button>
     </>
   );
 };
-
-

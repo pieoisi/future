@@ -37,7 +37,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("記録")}
+            onPress={() => navigation.navigate("記録", {time: latestTime, when:today})}
           >
             <Text style={styles.buttonText}>記録</Text>
           </TouchableOpacity>
@@ -93,10 +93,9 @@ const Stopwatch = ({ navigation }) => {
           onPress: () => {
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
-            const newItem = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+            const latestTime = `${hours}:${minutes}:${seconds}:${milliseconds}`;
             const today = Date(time);
             setTime(0);
-            navigation.navigate("記録", { item: newItem , date: today});
           },
         },
       ]);

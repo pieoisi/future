@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, SafeAreaView, FlatList } from "react-native";
+import React, { useState, useEffect} from "react";
+import { StyleSheet, Text, View, SafeAreaView, FlatList, Divider } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles.js";
 
 const Record = () => {
@@ -10,29 +9,33 @@ const Record = () => {
   const route = useRoute();
 
   // 受け取ったパラメータを取得
-  const { time, when } = route.params || {};
+  const { result, today } = route.params || {};
 
-  
+  const ItemList = [];
+  ItemList.push({
+    time: result,
+    date: today,
+  })
 
-   const renderItem = ({ item }) => (
-     <View style={styles.itemContainer}>
-       <Text style={styles.itemText}>
-         {item.item} ,{item.date}
-       </Text>
-     </View>
-   );
+
+   const renderItem = ({item}) =>{
+    console.log(item);
+    return (
+      <View style={styles.container}>
+        <View style={styles.item}>
+          <Text>{item.time}</Text>
+          <Text>{item.today}</Text>
+        </View>
+        <Divider />
+      </View>
+    );
+   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Record</Text>
-        <FlatList
-          data={items}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-    </SafeAreaView>
+    <View>
+      {/* 1 */}
+      <FlatList data={ItemList} renderItem={renderItem} />
+    </View>
   );
 };
 

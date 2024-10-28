@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler'
-import React from "react";
+import React ,{useEffect} from "react";
 import * as Notifications from "expo-notifications";
 import * as SQLite from "expo-sqlite";
 import { createStackNavigator } from "@react-navigation/stack";

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -37,7 +37,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("記録", {time: latestTime, when:today})}
+            onPress={() =>
+              navigation.navigate("記録", {
+                result: result,
+                today: today,
+              })
+            }
           >
             <Text style={styles.buttonText}>記録</Text>
           </TouchableOpacity>
@@ -52,6 +57,8 @@ const Stopwatch = ({ navigation }) => {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
+  let result = null;
+  let today = null;
 
   function handleStart() {
     const startTime = Date.now() - time;
@@ -93,8 +100,8 @@ const Stopwatch = ({ navigation }) => {
           onPress: () => {
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
-            const latestTime = `${hours}:${minutes}:${seconds}:${milliseconds}`;
-            const today = Date(time);
+            result = `${hours}:${minutes}:${seconds}:${milliseconds}`;
+            today = Date(time);
             setTime(0);
           },
         },
@@ -117,6 +124,12 @@ const Stopwatch = ({ navigation }) => {
     <>
       <Text style={styles.stopwatchText}>
         {hours}:{minutes}:{seconds}:{milliseconds}
+        {"\n"}
+        {time}
+        {"\n"}
+        {time % 1000}
+        {"\n"}
+        {(time % 1000) / 10}
       </Text>
       {isRunning ? (
         <Button

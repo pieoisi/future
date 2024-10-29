@@ -1,12 +1,21 @@
-touchableOpacity で、usestateの中身を変更するのはできたから、
-1　ボタン押してaというuseStateをtrue にする
-2　if文で、aがtrueなら、bというuseStateを1秒おきに+1でsetするみたいな
+10/29夜
+残りやること
 
-isRunning ?　みたいな感じで画像変更できそう 2はクリア
+routeのparamとして受け取ったdateText,resultTextをリストに入れて、それをasync-storageを使って保存する
+それを呼び出して表示までできたらひとまずOKかな
 
-https://zenn.dev/ringotabetai/articles/a25060eb756b0c
-これ読みながら作る
+いきなりasyncやるとぜったいむりなので、
+まずは
+・受け取ったものをリストに入れる　前のやつを消さずに
+という仕組みと
+・リストに入ったものをうまくviewとかでまとめて表示する
+多分FlatListでやると思う
 
-memo2.txt の中のやつがストップウォッチの仮の姿
-
-react-native-background-timerで、通知送られてアプリを開いた瞬間からタイマーがスタートする　目標時間以降に開くと自動でスタートする
+という仕組みができればいいかな
+https://qiita.com/wafuwafu13/items/ffce0ce7e170ecb04701#flatlist%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B
+これ参考にすると非常に良いと思われる。
+FlatListの中さえ作れればそれっぽい
+とりあえず受け取ったparamをリストに追加（置換じゃない）していく仕組みをつくろう
+配列を2個用意して、
+一個目はparamの一時格納用
+二個目は一個目のdataをpushする用みたいにわけるとできる気がする！！！がんばれ！

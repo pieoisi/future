@@ -17,6 +17,8 @@ const Record = () => {
 
   // 受け取ったパラメータを取得
   const { resultText, dateText } = route.params;
+  //ここで毎回ItemListを初期化してしまっているので何度代入しても配列に最新のものしか代入されない
+  //最初からasync-storageを参照するようにする
   const ItemList = [];
   ItemList.push({
     result: resultText,

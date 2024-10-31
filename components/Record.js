@@ -1,35 +1,29 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
-  Text,
   View,
   SafeAreaView,
   FlatList,
-  Divider,
 } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { Divider, Text, useTheme } from "@rneui/themed";
+import { useRoute } from "@react-navigation/native";
 import styles from "../styles.js";
 
 const Record = () => {
-  const [items, setItems] = useState([]);
-  const navigation = useNavigation();
   const route = useRoute();
 
   // 受け取ったパラメータを取得
-  const { resultText, dateText } = route.params;
-  const ItemList = [];
-  ItemList.push({
-    result: resultText,
-    date: dateText,
-  });
+  const dataList = route.params;
+
+
+
 
   const renderItem = ({ item }) => {
     console.log(item);
     return (
       <View style={styles.container}>
         <View style={styles.item}>
-          <Text>{item.time}{"\n"}</Text>
-          <Text>{item.today}</Text>
+          <Text>{item.result}{"\n"}</Text>
+          <Text>{item.date}</Text>
         </View>
         <Divider />
       </View>
@@ -39,16 +33,10 @@ const Record = () => {
   return (
     <View>
       <View>
-        <FlatList data={ItemList} renderItem={renderItem} />
+        <FlatList data={dataList} renderItem={renderItem} />
       </View>
       <Text>
-        {resultText}
-        {"\n"}
-        {dateText}
-        {"\n"}
-        {JSON.stringify(ItemList)}
-        {"\n"}
-        {}
+        {dataList}
       </Text>
     </View>
   );

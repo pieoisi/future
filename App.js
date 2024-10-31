@@ -4,7 +4,7 @@ import * as Notifications from "expo-notifications";
 import * as SQLite from "expo-sqlite";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import HomeScreen from "./components/HomeScreen";
+import Home from "./components/Home";
 import Settings from "./components/Settings";
 import Record from "./components/Record";
 
@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 function MyStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ホーム" component={HomeScreen} />
+      <Stack.Screen name="ホーム" component={Home} />
       <Stack.Screen name="設定" component={Settings} />
       <Stack.Screen name="記録" component={Record} />
     </Stack.Navigator>

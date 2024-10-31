@@ -1,21 +1,22 @@
 import React, { useState, useRef } from "react";
 import {
-  Text,
   View,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Image,
-  Button,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../styles.js";
 
-export default function HomeScreen() {
+export default function Home() {
   const navigation = useNavigation();
-  const [result, setResult] = useState("けっか");
-  const [date, setDate] = useState("ひにち");
+
+  const [result, setResult] = useState();
+  const [date, setDate] = useState();
+  const [dataList, setDataList] = useState([]);
+
+
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -31,6 +32,7 @@ export default function HomeScreen() {
   function handlePause() {
     clearInterval(intervalRef.current);
     setIsRunning(false);
+    //今はテスト用に5秒以下にしている
     if (parseInt(seconds, 10) < 5) {
       Alert.alert(
         "現在のタイムは5分以下です",
@@ -60,6 +62,9 @@ export default function HomeScreen() {
           onPress: () => {
             setResult(`${hours}:${minutes}:${seconds}:${milliseconds}`);
             setDate(Date(time));
+            setDataList((prevResults) => {
+              return [...prevResults, { result: result, date:date }]
+            });
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
             setTime(0);
@@ -80,15 +85,12 @@ export default function HomeScreen() {
   const minutes = `0${Math.floor(time / 60000) % 60}`.slice(-2);
   const hours = `0${Math.floor(time / 3600000)}`.slice(-2);
 
-  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Image
-            source={require("../assets/AcYXlgqfOd9m7DH1727664233_1727664266.png")}
-            style={styles.titleImage}
-          ></Image>
+          <Text>タイトルテキスト</Text>
         </View>
         <View style={styles.stopwatchContainer}>
           <Text style={styles.stopwatchText}>
@@ -115,11 +117,8 @@ export default function HomeScreen() {
           <TouchableOpacity
             style={styles.button}
             onPress={() =>
-              navigation.navigate("記録", {
-                resultText: result,
-                dateText: date,
-              })
-            }
+              navigation.navigate("記録", dataList
+            )}
           >
             <Text style={styles.buttonText}>記録</Text>
           </TouchableOpacity>

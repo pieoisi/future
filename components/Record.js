@@ -12,10 +12,12 @@ const Record = () => {
   const route = useRoute();
 
   // 受け取ったパラメータを取得
-  const dataList = route.params;
-
-
-
+  const { resultText, dateText } = route.params;
+  const ItemList = [];
+  ItemList.push({
+    result: resultText,
+    date: dateText,
+  });
 
   const renderItem = ({ item }) => {
     console.log(item);

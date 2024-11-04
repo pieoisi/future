@@ -1,46 +1,35 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-} from "react-native";
-import { Divider, Text, useTheme } from "@rneui/themed";
+import React, { useState } from "react";
+import { View, SafeAreaView, FlatList } from "react-native";
+import { ListItem, Divider } from "@rneui/themed";
 import { useRoute } from "@react-navigation/native";
 import styles from "../styles.js";
 
 const Record = () => {
   const route = useRoute();
+  // Get received parameters
+  const stateData = route.params;
 
-  // 受け取ったパラメータを取得
-  const { resultText, dateText } = route.params;
-  const ItemList = [];
-  ItemList.push({
-    result: resultText,
-    date: dateText,
-  });
+  const [dataList, setDataList] = useState();
 
-  const renderItem = ({ item }) => {
-    console.log(item);
-    return (
-      <View style={styles.container}>
-        <View style={styles.item}>
-          <Text>{item.result}{"\n"}</Text>
-          <Text>{item.date}</Text>
-        </View>
-        <Divider />
-      </View>
-    );
-  };
+  setDataList(stateData);
+
+  renderItem = ({ item }) => (
+    <ListItem bottomDivider>
+      <ListItem.Content>
+        <ListItem.Title>{item.result}</ListItem.Title>
+        <ListItem.Subtitle>{item.date}</ListItem.Subtitle>
+      </ListItem.Content>
+      <ListItem.Chevron />
+      <Divider />
+    </ListItem>
+  );
 
   return (
-    <View>
+    <SafeAreaView>
       <View>
         <FlatList data={dataList} renderItem={renderItem} />
       </View>
-      <Text>
-        {dataList}
-      </Text>
-    </View>
+    </SafeAreaView>
   );
 };
 

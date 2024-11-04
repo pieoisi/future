@@ -1,22 +1,42 @@
 import React, { useState, useRef } from "react";
 import {
+  Text,
   View,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Image,
+  Button,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../styles.js";
 
 export default function Home() {
   const navigation = useNavigation();
+  const [stateData, setStateData] = useState([]);
 
-  const [result, setResult] = useState();
-  const [date, setDate] = useState();
-  const [dataList, setDataList] = useState([]);
+  //storageからデータを読み込み、stateDataに代入
+  (async () => {
+    try {
+      console.log("l25 in-try");
+      // 何もしない
+      const value = await AsyncStorage.getItem("my-key");
+      if (value !== null) {
+        await setStateData(JSON.parse(value));
+        console.log("l29 success");
+      } else {
+        console.log("value is null");
+      }
+    } catch (e) {
+      // error reading value
+      console.log("l32" + e.message);
+    }
+  })();
 
-
+  const [resultText, setResultText] = useState();
+  const [dateText, setDateText] = useState();
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -32,7 +52,6 @@ export default function Home() {
   function handlePause() {
     clearInterval(intervalRef.current);
     setIsRunning(false);
-    //今はテスト用に5秒以下にしている
     if (parseInt(seconds, 10) < 5) {
       Alert.alert(
         "現在のタイムは5分以下です",
@@ -60,11 +79,29 @@ export default function Home() {
         {
           text: "OK",
           onPress: () => {
-            setResult(`${hours}:${minutes}:${seconds}:${milliseconds}`);
-            setDate(Date(time));
-            setDataList((prevResults) => {
-              return [...prevResults, { result: result, date:date }]
+            setResultText((prevState) => {
+              return (prevState = `${hours}:${minutes}:${seconds}:${milliseconds}`);
             });
+            setDateText((prevState) => {
+              return (prevState = Date(time));
+            });
+            //setStateDataで{resultTextとDateTextをresult dateの中に代入したもの}をstateDataに追加
+
+            setStateData((prevList) => {
+              return [...prevList, { result: resultText, date: dateText }];
+            });
+
+            (async (stateData) => {
+              try {
+                const jsonSaveValue = JSON.stringify(stateData);
+                await AsyncStorage.setItem("my-key", jsonSaveValue);
+                console.log("storage-save success");
+              } catch (e) {
+                // saving error
+                console.log("l83 " + e.message);
+              }
+            })();
+
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
             setTime(0);
@@ -85,12 +122,14 @@ export default function Home() {
   const minutes = `0${Math.floor(time / 60000) % 60}`.slice(-2);
   const hours = `0${Math.floor(time / 3600000)}`.slice(-2);
 
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text>タイトルテキスト</Text>
+          <Image
+            source={require("../assets/AcYXlgqfOd9m7DH1727664233_1727664266.png")}
+            style={styles.titleImage}
+          ></Image>
         </View>
         <View style={styles.stopwatchContainer}>
           <Text style={styles.stopwatchText}>
@@ -106,22 +145,19 @@ export default function Home() {
             <Button onPress={handleStart} title="Start"></Button>
           )}
           <Button onPress={handleReset} title="Reset"></Button>
+          <Text></Text>
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
+          <Button
+            title="設定"
             style={styles.button}
             onPress={() => navigation.navigate("設定")}
-          >
-            <Text style={styles.buttonText}>設定</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          />
+          <Button
+            title="記録"
             style={styles.button}
-            onPress={() =>
-              navigation.navigate("記録", dataList
-            )}
-          >
-            <Text style={styles.buttonText}>記録</Text>
-          </TouchableOpacity>
+            onPress={() => navigation.navigate("記録", stateData)}
+          />
         </View>
         <StatusBar style="light" />
       </View>

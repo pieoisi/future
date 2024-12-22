@@ -15,28 +15,7 @@ import styles from "../styles.js";
 
 export default function Home() {
   const navigation = useNavigation();
-  const [stateData, setStateData] = useState([]);
 
-  //storageからデータを読み込み、stateDataに代入
-  (async () => {
-    try {
-      console.log("l25 in-try");
-      // 何もしない
-      const value = await AsyncStorage.getItem("my-key");
-      if (value !== null) {
-        await setStateData(JSON.parse(value));
-        console.log("l29 success");
-      } else {
-        console.log("value is null");
-      }
-    } catch (e) {
-      // error reading value
-      console.log("l32" + e.message);
-    }
-  })();
-
-  const [resultText, setResultText] = useState();
-  const [dateText, setDateText] = useState();
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
@@ -79,28 +58,6 @@ export default function Home() {
         {
           text: "OK",
           onPress: () => {
-            setResultText((prevState) => {
-              return (prevState = `${hours}:${minutes}:${seconds}:${milliseconds}`);
-            });
-            setDateText((prevState) => {
-              return (prevState = Date(time));
-            });
-            //setStateDataで{resultTextとDateTextをresult dateの中に代入したもの}をstateDataに追加
-
-            setStateData((prevList) => {
-              return [...prevList, { result: resultText, date: dateText }];
-            });
-
-            (async (stateData) => {
-              try {
-                const jsonSaveValue = JSON.stringify(stateData);
-                await AsyncStorage.setItem("my-key", jsonSaveValue);
-                console.log("storage-save success");
-              } catch (e) {
-                // saving error
-                console.log("l83 " + e.message);
-              }
-            })();
 
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
@@ -156,7 +113,7 @@ export default function Home() {
           <Button
             title="記録"
             style={styles.button}
-            onPress={() => navigation.navigate("記録", stateData)}
+            onPress={() => navigation.navigate("記録",)}
           />
         </View>
         <StatusBar style="light" />

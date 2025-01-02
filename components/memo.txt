@@ -1,0 +1,25 @@
+refの中身
+結果を同じ形式で書きたいので配列に
+
+[
+    {
+        date:aa,
+        time:bb,
+    },
+    {
+        date:cc,
+        time:dd,
+    },
+    {
+        date:ee,
+        time:ff,
+    }
+]
+
+
+
+useStateの時は下のような書き方をしなければならないが、
+useRefはレンダリングに影響を及ぼさないはずなのでpushでいいと思う。
+setTodos((prevTodos) => {
+    return [...prevTodos, { task: "買い物", isDone: false }]
+     });

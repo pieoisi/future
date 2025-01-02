@@ -20,6 +20,22 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
 
+  // 初回レンダリング時のみ実行
+  useEffect(() => {
+    // ストレージをrefに代入
+    (async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("my-key");
+        return jsonValue != null ? JSON.parse(jsonValue) : [];
+        //resultRefに、ストレージの内容を同期
+        const resultRef = useRef(jsonValue);
+      } catch (e) {
+        // error reading value
+        console.log("loading error");
+      }
+    })();
+  }, []);
+
   function handleStart() {
     const startTime = Date.now() - time;
     intervalRef.current = setInterval(() => {
@@ -58,10 +74,24 @@ export default function Home() {
         {
           text: "OK",
           onPress: () => {
+            // 今回の結果をresultに代入
+            const result = {result:time, date:Date.now()};
+            // resultRefにresultをpush
+            resultRef.current.push(result)
 
+            (async (resultRef) => {
+              try {
+                const jsonValue = JSON.stringify(resultRef);
+                await AsyncStorage.setItem("my-key", jsonValue);
+              } catch (e) {
+                // saving error
+                console.log("saving error")
+              }
+            })();
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
             setTime(0);
+
           },
         },
       ]);
@@ -113,7 +143,7 @@ export default function Home() {
           <Button
             title="記録"
             style={styles.button}
-            onPress={() => navigation.navigate("記録",)}
+            onPress={() => navigation.navigate("記録")}
           />
         </View>
         <StatusBar style="light" />

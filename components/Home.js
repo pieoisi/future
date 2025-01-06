@@ -37,7 +37,7 @@ export default function Home() {
   }, []);
 
   function handleStart() {
-    const startTime = Date.now() - time;
+    const startTime = Date.now();
     intervalRef.current = setInterval(() => {
       setIsRunning(true);
       setTime(Date.now() - startTime);
@@ -75,23 +75,20 @@ export default function Home() {
           text: "OK",
           onPress: () => {
             // 今回の結果をresultに代入
-            const result = {result:time, date:Date.now()};
+            const result = { result: time, date: Date.now() };
             // resultRefにresultをpush
-            resultRef.current.push(result)
-
-            (async (resultRef) => {
+            resultRef.current.push(result)(async (resultRef) => {
               try {
                 const jsonValue = JSON.stringify(resultRef);
                 await AsyncStorage.setItem("my-key", jsonValue);
               } catch (e) {
                 // saving error
-                console.log("saving error")
+                console.log("saving error");
               }
             })();
             Alert.alert("お疲れさまでした！", Date(time));
             clearInterval(intervalRef.current);
             setTime(0);
-
           },
         },
       ]);
@@ -104,7 +101,6 @@ export default function Home() {
     setTime(0);
   }
 
-  const milliseconds = `00${Math.floor(time)}`.slice(-3, -1);
   const seconds = `0${Math.floor(time / 1000) % 60}`.slice(-2);
   const minutes = `0${Math.floor(time / 60000) % 60}`.slice(-2);
   const hours = `0${Math.floor(time / 3600000)}`.slice(-2);
@@ -120,7 +116,7 @@ export default function Home() {
         </View>
         <View style={styles.stopwatchContainer}>
           <Text style={styles.stopwatchText}>
-            {hours}:{minutes}:{seconds}:{milliseconds}
+            {hours}:{minutes}:{seconds}
           </Text>
           {isRunning ? (
             <Button

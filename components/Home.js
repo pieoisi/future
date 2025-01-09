@@ -140,7 +140,7 @@ export default function Home() {
           <Button
             title="記録"
             style={styles.button}
-            onPress={() => navigation.navigate("記録")}
+            onPress={() => navigation.navigate("記録", {storage:storageData})}
           />
         </View>
         <StatusBar style="light" />

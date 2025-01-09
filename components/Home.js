@@ -74,13 +74,14 @@ export default function Home() {
         {
           text: "OK",
           onPress: () => {
-            // 今回の結果をresultに代入
+            // 今回のタイマー結果をresultに代入
             const result = { result: time, date: Date.now() };
             // resultRefにresultをpush
-            resultRef.current.push(result)(async (resultRef) => {
+            resultRef.current.push(result);
+            (async (resultRef) => {
               try {
                 const jsonValue = JSON.stringify(resultRef);
-                await AsyncStorage.setItem("my-key", jsonValue);
+                // jsonValueをストレージに代入
               } catch (e) {
                 // saving error
                 console.log("saving error");
